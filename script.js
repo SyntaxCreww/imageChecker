@@ -1,5 +1,3 @@
-const API_KEY = "AIzaSyB4tMC8eww1IC8pHBjzt9JvrrJ5e8sjHGg";
-
 const fileInput = document.getElementById("imageInput");
 const analyzeBtn = document.getElementById("analyzeBtn");
 const chatbox = document.getElementById("chatBox");
@@ -20,11 +18,6 @@ analyzeBtn.addEventListener("click", async () => {
     return;
   }
 
-  if (!API_KEY) {
-    addBotMessage("❌ API key is missing. Please provide a valid API key.");
-    return;
-  }
-
   addBotMessage("📤 Uploading and analyzing image...");
 
   const reader = new FileReader();
@@ -33,28 +26,20 @@ analyzeBtn.addEventListener("click", async () => {
     const base64Image = reader.result.split(",")[1]; // Get only base64 part
 
     try {
-      const response = await fetch(
-        `https://vision.googleapis.com/v1/images:annotate?key=${API_KEY}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            requests: [
-              {
-                image: { content: base64Image },
-                features: [{ type: "LABEL_DETECTION", maxResults: 5 }],
-              },
-            ],
-          }),
-        }
-      );
+      const response = await fetch("http://localhost:3000/analyze", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ base64Image }),
+      });
 
       if (!response.ok) {
         const errorText = await response.text();
-        addBotMessage(`❌ API request failed with status ${response.status}.`);
-        console.error("API Error Response:", errorText);
+        addBotMessage(
+          `❌ Server request failed with status ${response.status}.`
+        );
+        console.error("Server Error Response:", errorText);
         return;
       }
 
@@ -78,9 +63,9 @@ analyzeBtn.addEventListener("click", async () => {
       }
     } catch (error) {
       addBotMessage(
-        "❌ Failed to analyze the image. Please check your API key and network."
+        "❌ Failed to analyze the image. Please check your server and network."
       );
-      console.error("Error during Vision API call:", error);
+      console.error("Error during server call:", error);
     }
   };
 

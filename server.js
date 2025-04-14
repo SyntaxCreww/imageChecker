@@ -1,13 +1,18 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const fetch = require("node-fetch");
+const cors = require("cors"); // Import the CORS middleware
 
 const app = express();
 const PORT = 3000;
 const API_KEY = "AIzaSyB4tMC8eww1IC8pHBjzt9JvrrJ5e8sjHGg";
 
+// Enable CORS for all origins
+app.use(cors());
+
+// Middleware to parse JSON requests
 app.use(bodyParser.json());
 
+// Route to handle image analysis
 app.post("/analyze", async (req, res) => {
   const { base64Image } = req.body;
 
@@ -48,6 +53,7 @@ app.post("/analyze", async (req, res) => {
   }
 });
 
+// Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
