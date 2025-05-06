@@ -2,6 +2,7 @@ const fileInput = document.getElementById("imageInput");
 const analyzeBtn = document.getElementById("analyzeBtn");
 const chatbox = document.getElementById("chatBox");
 
+//here add bot message function is getting declared
 function addBotMessage(message) {
   const div = document.createElement("div");
   div.className = "p-2 border rounded my-1 bg-white";
